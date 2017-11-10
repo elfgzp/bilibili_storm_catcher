@@ -16,14 +16,14 @@ class bilibiliClient():
 
     def __init__(self, room_id):
         self._roomId = room_id
-        self._ChatPort = 2243
+        self._ChatPort = 788
         self._uid = 0
         self._protocolversion = 1
         self._reader = 0
         self._writer = 0
         self.connected = False
         self._UserCount = 0
-        self._ChatHost = 'livecmt-2.bilibili.com'
+        self._ChatHost = 'livecmt-1.bilibili.com'
         self._sender = SenderService(room_id)
         self.log_danmaku = False
         self.log_danmaku_count = 0

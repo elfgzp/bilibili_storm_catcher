@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 
+import time
 import requests
 import os
 import http.cookies as Cookie
@@ -118,6 +119,7 @@ class SenderService(object):
         data = SEND_FORMAT
         data["msg"] = danmaku
         data["roomid"] = self.room_id
+        data["rnd"] = time.time() * 1000
         response = self.session.post(
             SEND_URL,
             data=data,
