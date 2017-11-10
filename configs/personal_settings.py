@@ -6,7 +6,7 @@ TIME_OUT = 20
 TIME_FORMAT = "%H:%M:%S"
 
 SEND_FORMAT = {
-    "color": 16777215,
-    "fontsize": 25,
+    "color": "000000",
+    "fontsize": "11",
     "mode": "1",
 }

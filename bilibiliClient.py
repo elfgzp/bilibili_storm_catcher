@@ -153,8 +153,8 @@ class bilibiliClient():
                 logging.exception(e)
 
             return
-        if cmd == 'DANMU_MSG' and dic['info'][2][0] == 2459271 and self._roomId != 234024:
-        # if cmd == 'DANMU_MSG':
+        # if cmd == 'DANMU_MSG' and dic['info'][2][0] == 2459271 and self._roomId != 234024:
+        if cmd == 'DANMU_MSG':
             commentText = dic['info'][1]
             commentUser = dic['info'][2][1]
             isAdmin = dic['info'][2][2] == '1'

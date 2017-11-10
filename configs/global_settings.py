@@ -27,7 +27,7 @@ LOGIN_DATA = {
 
 # LOGIN PART
 
-SEND_URL = 'http://api.live.bilibili.com/msg/send'
+SEND_URL = 'http://live.bilibili.com/msg/send'
 
 TURN_WELCOME = 1
 TURN_GIFT = 1
