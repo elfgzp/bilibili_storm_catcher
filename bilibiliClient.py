@@ -165,7 +165,7 @@ class bilibiliClient():
                 if isVIP:
                     commentUser = 'VIP ' + commentUser
                 try:
-                    print('房间:' + str(self._roomId) + commentUser + ' say: ' + commentText)
+                    logging.info('房间:' + str(self._roomId) + commentUser + ' say: ' + commentText)
                 except:
                     pass
 
