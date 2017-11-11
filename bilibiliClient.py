@@ -155,7 +155,7 @@ class bilibiliClient():
 
                 return
             # if cmd == 'DANMU_MSG' and dic['info'][2][0] == 2459271:
-            if cmd == 'DANMU_MSG':
+            if cmd == 'DANMU_MSG' and self.log_danmaku:
                 commentText = dic['info'][1]
                 commentUser = dic['info'][2][1]
                 isAdmin = dic['info'][2][2] == '1'
