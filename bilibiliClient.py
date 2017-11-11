@@ -116,62 +116,62 @@ class bilibiliClient():
     def parseDanMu(self, messages):
         try:
             dic = json.loads(messages)
-        except:  # 有些情况会 jsondecode 失败，未细究，可能平台导致
-            return
-        cmd = dic['cmd']
-        if cmd == 'SYS_GIFT':
+        except Exception as e:  # 有些情况会 jsondecode 失败，未细究，可能平台导致
+            pass
+        else:
+            cmd = dic['cmd']
+            if cmd == 'SYS_GIFT':
 
-            try:
-                if dic.get('giftId') == 39:
-                    response = requests.get('http://api.live.bilibili.com/SpecialGift/room/%s' % dic['roomid'])
-                    json_str = response.content.decode('utf-8')
-                    data = json.loads(json_str)
-                    content = data.get('gift39', {}).get('content')
+                try:
+                    if dic.get('giftId') == 39:
+                        response = requests.get('http://api.live.bilibili.com/SpecialGift/room/%s' % dic['roomid'])
+                        json_str = response.content.decode('utf-8')
+                        data = json.loads(json_str)
+                        content = data.get('gift39', {}).get('content')
+                        if content:
+                            self._sender.send_a_danmaku(content)
+                            self.log_danmaku = True
+                            logging.info('SPECIAL_GIFT room {}'.format(self._roomId))
+                            logging.info(messages)
+                            logging.info('参与{}节奏风暴抽奖'.format(self._roomId))
+                            logging.info('Storm room {}'.format(self._roomId))
+                except Exception as e:
+                    logging.exception(e)
+
+                return
+
+            if cmd == 'SPECIAL_GIFT':
+                try:
+                    content = dic['data'].get('39', {}).get('content')
                     if content:
-                        self._sender.send_a_danmaku(str(content))
+                        self._sender.send_a_danmaku(content)
                         self.log_danmaku = True
-                        logging.info('SPECIAL_GIFT room {}'.format(self._roomId))
-                        logging.info(messages.encode('utf-8'))
-                        print('参与{}节奏风暴抽奖'.format(self._roomId))
+                        logging.info('SYS_GIFT room {}'.format(self._roomId))
+                        logging.info(messages)
+                        logging.info('参与{}节奏风暴抽奖'.format(self._roomId))
                         logging.info('Storm room {}'.format(self._roomId))
-            except Exception as e:
-                logging.exception(e)
+                except Exception as e:
+                    logging.exception(e)
 
-            return
+                return
+            # if cmd == 'DANMU_MSG' and dic['info'][2][0] == 2459271:
+            if cmd == 'DANMU_MSG':
+                commentText = dic['info'][1]
+                commentUser = dic['info'][2][1]
+                isAdmin = dic['info'][2][2] == '1'
+                isVIP = dic['info'][2][3] == '1'
+                if isAdmin:
+                    commentUser = '管理员 ' + commentUser
+                if isVIP:
+                    commentUser = 'VIP ' + commentUser
+                try:
+                    print('房间:' + str(self._roomId) + commentUser + ' say: ' + commentText)
+                except:
+                    pass
 
-        if cmd == 'SPECIAL_GIFT':
-            try:
-                content = dic['data'].get('39', {}).get('content')
-                if content:
-                    self._sender.send_a_danmaku(str(content))
-                    self.log_danmaku = True
-                    logging.info('SYS_GIFT room {}'.format(self._roomId))
-                    logging.info(messages.encode('utf-8'))
-                    print('参与{}节奏风暴抽奖'.format(self._roomId))
-                    logging.info('Storm room {}'.format(self._roomId))
-            except Exception as e:
-                logging.exception(e)
+                self.log_danmaku_count += 1
 
-            return
-        # if cmd == 'DANMU_MSG' and dic['info'][2][0] == 2459271 and self._roomId != 234024:
-        if cmd == 'DANMU_MSG':
-            commentText = dic['info'][1]
-            commentUser = dic['info'][2][1]
-            isAdmin = dic['info'][2][2] == '1'
-            isVIP = dic['info'][2][3] == '1'
-            if isAdmin:
-                commentUser = '管理员 ' + commentUser
-            if isVIP:
-                commentUser = 'VIP ' + commentUser
-            try:
-                print('房间:' + str(self._roomId) + commentUser + ' say: ' + commentText)
-            except:
-                pass
-
-            self.log_danmaku_count += 1
-
-            if self.log_danmaku_count >= 100:
-                self.log_danmaku = False
-                self.log_danmaku_count = 0
-            return
-
+                if self.log_danmaku_count >= 10:
+                    self.log_danmaku = False
+                    self.log_danmaku_count = 0
+                return

@@ -1,6 +1,6 @@
 import asyncio
 import threading
-
+import multiprocessing
 from taskscreator import Taskcreator
 from sender import SenderService
 
@@ -10,12 +10,9 @@ from get_hot_room_ids import get_room_ids
 
 logging.config.fileConfig("logger.conf")
 
-if __name__ == '__main__':
-    lock = threading.Lock()
 
-    room_ids = []
-    for page in range(1, 6):
-        room_ids += get_room_ids(page)
+def start_catcher(page):
+    room_ids = get_room_ids(page)
     upers = Taskcreator(rooms=room_ids)
 
     asyncio.ensure_future(upers.creating())
@@ -30,3 +27,11 @@ if __name__ == '__main__':
         loop.run_forever()
 
     loop.close()
+
+
+if __name__ == '__main__':
+    pool = multiprocessing.Pool(processes=4)
+    for page in range(1, 5):
+        pool.apply_async(start_catcher, (page,))
+    pool.close()
+    pool.join()
