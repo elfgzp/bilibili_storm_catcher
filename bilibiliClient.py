@@ -171,7 +171,7 @@ class bilibiliClient():
 
                 self.log_danmaku_count += 1
 
-                if self.log_danmaku_count >= 10:
+                if self.log_danmaku_count >= 25:
                     self.log_danmaku = False
                     self.log_danmaku_count = 0
                 return
