@@ -1,9 +1,11 @@
 import logging
 import aiohttp
 from http import cookies
+from pybililive.handler import danmmu_msg
 from pybililive.consts import (
     LIVE_BASE_URL, SEND_DANMU_URI
 )
+import time
 
 logger = logging.getLogger('bili')
 
@@ -75,6 +77,35 @@ async def sys_gift(live_obj, message):
             if content:
                 await send_danmu(content, room_id=message['roomid'])
                 logging.info('参与房间 {} 节奏风暴'.format(live_obj.room_id))
+    except Exception as e:
+        logging.exception(e)
+
+
+async def check_special_gift(live_obj, message):
+    try:
+        content = message['data'].get('39', {}).get('content')
+        if content:
+            live_obj.set_cmd_func('DANMU_MSG', danmmu_msg)
+            await time.sleep(5)
+            live_obj.set_cmd_func('DANMU_MSG', None)
+    except Exception as e:
+        logging.exception(e)
+
+
+async def check_sys_gift(live_obj, message):
+    try:
+
+        if message.get('giftId') == 39:
+            res = await aiohttp.request(
+                'GET',
+                r'http://api.live.bilibili.com/SpecialGift/room/{}'.format(message['roomid'])
+            )
+            data = await res.json()
+            content = data['data'].get('gift39', {}).get('content')
+            if content:
+                live_obj.set_cmd_func('DANMU_MSG', danmmu_msg)
+                await time.sleep(5)
+                live_obj.set_cmd_func('DANMU_MSG', None)
     except Exception as e:
         logging.exception(e)
 
