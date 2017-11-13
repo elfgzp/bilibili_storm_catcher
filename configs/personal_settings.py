@@ -9,4 +9,5 @@ SEND_FORMAT = {
     "color": "000000",
     "fontsize": "11",
     "mode": "1",
+
 }
