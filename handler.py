@@ -3,7 +3,9 @@ import aiohttp
 import asyncio
 import requests
 import json
+import time
 from http import cookies
+from threading import Thread
 from pybililive.handler import danmmu_msg
 from pybililive.consts import (
     LIVE_BASE_URL, SEND_DANMU_URI
@@ -29,8 +31,23 @@ danmu_url = r'http://{host}:{port}/{uri}'.format(
 user_session = requests.session()
 
 
+def keep_session():
+    while True:
+        global user_session
+        user_session.get(
+            url='http://live.bilibili.com/User/getUserInfo',
+            headers={'Cookie': cookie_str}
+        )
+        time.sleep(10)
+        logger.info('Keep session alive.')
+
+
+keep_alive_thread = Thread(target=keep_session)
+keep_alive_thread.start()
+
 async def send_danmu(danmu, room_id, color="000000", font_size='11', mode='1'):
     try:
+        global user_session
         res = user_session.post(
             url=danmu_url,
             headers={'Cookie': cookie_str},
@@ -61,9 +78,9 @@ async def special_gift(live_obj, message):
         content = message['data'].get('39', {}).get('content')
         if content:
             await send_danmu(content, room_id=live_obj.room_id)
-            logging.info('参与房间 {} 节奏风暴'.format(live_obj.room_id))
+            logger.info('参与房间 {} 节奏风暴'.format(live_obj.room_id))
     except Exception as e:
-        logging.exception(e)
+        logger.exception(e)
 
 
 async def sys_gift(live_obj, message):
@@ -78,9 +95,9 @@ async def sys_gift(live_obj, message):
             content = data['data'].get('gift39', {}).get('content')
             if content:
                 await send_danmu(content, room_id=message['roomid'])
-                logging.info('参与房间 {} 节奏风暴'.format(live_obj.room_id))
+                logger.info('参与房间 {} 节奏风暴'.format(live_obj.room_id))
     except Exception as e:
-        logging.exception(e)
+        logger.exception(e)
 
 
 async def check_special_gift(live_obj, message):
@@ -91,7 +108,7 @@ async def check_special_gift(live_obj, message):
             await asyncio.sleep(5)
             live_obj.set_cmd_func('DANMU_MSG', None)
     except Exception as e:
-        logging.exception(e)
+        logger.exception(e)
 
 
 async def check_sys_gift(live_obj, message):
@@ -109,7 +126,7 @@ async def check_sys_gift(live_obj, message):
                 await asyncio.sleep(5)
                 live_obj.set_cmd_func('DANMU_MSG', None)
     except Exception as e:
-        logging.exception(e)
+        logger.exception(e)
 
 
 cmd_func = {

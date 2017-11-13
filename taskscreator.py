@@ -1,7 +1,7 @@
 import logging
 import asyncio
 from pybililive.bililive import BiliLive
-from handler import cmd_func
+import handler
 
 logger = logging.getLogger('bili')
 
@@ -15,7 +15,7 @@ class Taskcreator(object):
 
     async def creating(self):
         for room in self.rooms:
-            danmuji = BiliLive(room, cmd_func_dict=cmd_func)
+            danmuji = BiliLive(room, cmd_func_dict=handler.cmd_func)
             task = asyncio.ensure_future(danmuji.connect())
             self.tasks[room] = task
             await asyncio.sleep(0.2)
@@ -27,7 +27,7 @@ class Taskcreator(object):
                     task.cancel()
                     logging.info('重新进入直播间 %s' % room)
                     logging.debug('reenter %s' % room)
-                    danmuji = BiliLive(room)
+                    danmuji = BiliLive(room, cmd_func_dict=handler.cmd_func)
                     task = asyncio.ensure_future(danmuji.connect())
                     self.tasks[room] = task
             logging.debug('len: %s' % len(self.tasks))

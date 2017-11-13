@@ -3,7 +3,6 @@ from taskscreator import Taskcreator
 import asyncio
 import logging.config
 from get_hot_room_ids import get_room_ids
-from threading import Thread
 
 logging.config.fileConfig("logger.conf")
 
