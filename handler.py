@@ -1,12 +1,11 @@
 import logging
 import aiohttp
+import asyncio
 from http import cookies
 from pybililive.handler import danmmu_msg
 from pybililive.consts import (
     LIVE_BASE_URL, SEND_DANMU_URI
 )
-import time
-
 logger = logging.getLogger('bili')
 
 
@@ -47,9 +46,9 @@ async def send_danmu(danmu, room_id, color="000000", font_size='11', mode='1'):
 
     except Exception as e:
         logger.exception(e)
-        logger.error('弹幕 {} 发送失败'.format(danmu))
+        logger.error('房间{} 弹幕 {} 发送失败'.format(room_id, danmu))
     else:
-        logger.info('弹幕 {} 发送成功'.format(danmu))
+        logger.info('房间{}  弹幕 {} 发送成功'.format(room_id, danmu))
     finally:
         return
 
@@ -86,7 +85,7 @@ async def check_special_gift(live_obj, message):
         content = message['data'].get('39', {}).get('content')
         if content:
             live_obj.set_cmd_func('DANMU_MSG', danmmu_msg)
-            await time.sleep(5)
+            await asyncio.sleep(5)
             live_obj.set_cmd_func('DANMU_MSG', None)
     except Exception as e:
         logging.exception(e)
@@ -104,7 +103,7 @@ async def check_sys_gift(live_obj, message):
             content = data['data'].get('gift39', {}).get('content')
             if content:
                 live_obj.set_cmd_func('DANMU_MSG', danmmu_msg)
-                await time.sleep(5)
+                await asyncio.sleep(5)
                 live_obj.set_cmd_func('DANMU_MSG', None)
     except Exception as e:
         logging.exception(e)
@@ -112,5 +111,6 @@ async def check_sys_gift(live_obj, message):
 
 cmd_func = {
     'SPECIAL_GIFT': special_gift,
-    'SYS_GIFT': sys_gift
+    'SYS_GIFT': sys_gift,
+    # 'DANMU_MSG': danmmu_msg
 }

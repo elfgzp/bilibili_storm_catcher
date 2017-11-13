@@ -214,8 +214,6 @@ class BiliLive(object):
             return
 
     def set_cmd_func(self, cmd, func):
-        if not isinstance(func, function):
-            raise TypeError('func must be a function')
         self._cmd_func[cmd] = func
 
     async def on_message(self, message):
