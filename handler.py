@@ -18,7 +18,7 @@ def build_cookie_with_str(cookie_str):
 cookie_str = 'sid=d24ub4gg; fts=1503276824; UM_distinctid=15e09e01b98495-0598b3da3e60dc-31627c01-13c680-15e09e01b99c60; rpdid=kwmooqmqlkdoswpislpxw; LIVE_BUVID=6d50208d52bbd75e052fea6895db682d; LIVE_BUVID__ckMd5=c3e520c2fbe55044; biliMzIsnew=1; biliMzTs=0; Hm_lvt_ff57561a8cad2056ebeb8790418f7c80=1505378377; __guid=136533283.2349724059770041300.1506006783656.525; buvid3=236A760C-90D4-45DE-ADA9-EBC1909C0AB11984infoc; im_seqno_2459271=2035; finger=14bc3c4e; Hm_lvt_8a6d461cf92ec46bd14513876885e489=1509712825,1509855250,1510034539,1510460734; DedeUserID=2459271; DedeUserID__ckMd5=3c272ac53b78f4fc; SESSDATA=5b1c4482%2C1513171920%2C25da359b; bili_jct=c2ecf18cf6f5fb354af88839b6ce26f9; F_S_T_2459271=1; Hm_lvt_8a6e55dbd2870f0f5bc9194cddf32a02=1510406674,1510410659,1510579907,1510579912; Hm_lpvt_8a6e55dbd2870f0f5bc9194cddf32a02=1510579928'
 
 danmu_url = r'http://{host}:{port}/{uri}'.format(
-    host='114.80.223.172',
+    host='122.228.77.82',
     port=80,
     uri=SEND_DANMU_URI
 )
