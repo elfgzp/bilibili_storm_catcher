@@ -1,11 +1,14 @@
 import logging
 import aiohttp
 import asyncio
+import requests
+import json
 from http import cookies
 from pybililive.handler import danmmu_msg
 from pybililive.consts import (
     LIVE_BASE_URL, SEND_DANMU_URI
 )
+
 logger = logging.getLogger('bili')
 
 
@@ -23,24 +26,24 @@ danmu_url = r'http://{host}:{port}/{uri}'.format(
     uri=SEND_DANMU_URI
 )
 
-user_cookies = build_cookie_with_str(cookie_str)
+user_session = requests.session()
 
 
 async def send_danmu(danmu, room_id, color="000000", font_size='11', mode='1'):
     try:
-        res = await aiohttp.request(
-            'POST', danmu_url,
+        res = user_session.post(
+            url=danmu_url,
+            headers={'Cookie': cookie_str},
             data={
                 'msg': danmu,
                 'color': color,
                 'fontsize': font_size,
                 'roomid': room_id,
                 'mode': mode
-            },
-            cookies=user_cookies
+            }
         )
 
-        data = await res.json()
+        data = json.loads(res.text)
         if data['msg']:
             raise Exception(data['msg'])
 
