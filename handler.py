@@ -43,6 +43,7 @@ def keep_session():
 
 
 keep_alive_thread = Thread(target=keep_session)
+keep_alive_thread.setDaemon(True)
 keep_alive_thread.start()
 
 async def send_danmu(danmu, room_id, color="000000", font_size='11', mode='1'):
