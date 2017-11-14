@@ -27,26 +27,29 @@ def start_catcher(page):
 
 
 if __name__ == '__main__':
-    pool = multiprocessing.Pool(processes=10)
+    # pool = multiprocessing.Pool(processes=10)
+    # for page in range(1, 11):
+    #     pool.apply_async(start_catcher, (page,))
+    # pool.close()
+    # pool.join()
+
+
+
+    room_ids = []
     for page in range(1, 11):
-        pool.apply_async(start_catcher, (page,))
-    pool.close()
-    pool.join()
-    # room_ids = []
-    # for page in range(1, 6):
-    #     room_ids += get_room_ids(page)
-    # creator = Taskcreator(rooms=room_ids)
-    #
-    # asyncio.ensure_future(creator.creating())
-    #
-    # loop = asyncio.get_event_loop()
-    # loop.set_debug(True)
-    # try:
-    #     loop.run_forever()
-    # except Exception as e:
-    #     logging.exception(e)
-    #     for task in asyncio.Task.all_tasks():
-    #         task.cancel()
-    #     loop.run_forever()
-    #
-    # loop.close()
+        room_ids += get_room_ids(page)
+    creator = Taskcreator(rooms=room_ids)
+
+    asyncio.ensure_future(creator.creating())
+
+    loop = asyncio.get_event_loop()
+    loop.set_debug(True)
+    try:
+        loop.run_forever()
+    except Exception as e:
+        logging.exception(e)
+        for task in asyncio.Task.all_tasks():
+            task.cancel()
+        loop.run_forever()
+
+    loop.close()

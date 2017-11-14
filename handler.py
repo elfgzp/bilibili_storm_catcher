@@ -39,7 +39,7 @@ def keep_session():
             headers={'Cookie': cookie_str}
         )
         time.sleep(10)
-        logger.info('Keep session alive.')
+        logger.debug('Keep session alive.')
 
 
 keep_alive_thread = Thread(target=keep_session)
