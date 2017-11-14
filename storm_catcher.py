@@ -27,8 +27,8 @@ def start_catcher(page):
 
 
 if __name__ == '__main__':
-    pool = multiprocessing.Pool(processes=10)
-    for page in range(1, 11):
+    pool = multiprocessing.Pool(processes=5)
+    for page in range(1, 6):
         pool.apply_async(start_catcher, (page,))
     pool.close()
     pool.join()
