@@ -12,3 +12,5 @@ def get_room_ids(page):
     if data['code'] == 0:
         room_ids = [each['roomid'] for each in data['data']]
     return room_ids
+
+
