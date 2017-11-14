@@ -63,6 +63,7 @@ async def send_danmu(danmu, room_id, color="000000", font_size='11', mode='1'):
 
         data = json.loads(res.text)
         if data['msg']:
+            logging.exception(data)
             raise Exception(data['msg'])
 
     except Exception as e:
